@@ -7,12 +7,13 @@ import schedule
 import time
 
 def download_data(api, path):
+    # check if file exist
     existing_file = os.listdir(path)
     if existing_file:
         print("Data Already exists. Skipping Download")
         return
     
-
+    #download dataset from kaggle
     api.dataset_download_files(
     dataset='pdaasha/ga4-obfuscated-sample-ecommerce-jan2021',
     path= path,
@@ -20,7 +21,7 @@ def download_data(api, path):
 )
     
 def load_data(path):
-
+    #check file ends with .csv
     files = [f for f in os.listdir(path) if f.endswith('.csv')]
     if not files:
         return None
@@ -106,7 +107,6 @@ def upload_to_sheets(df):
         SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
         creds = Credentials.from_service_account_file(
-            #r"C:\Users\dwika\Credentials\g-drive-api-1-b53a768ea031.json",
             "./credentials/g-drive-api-1-b53a768ea031.json",
             scopes=SCOPES
         )
@@ -140,7 +140,6 @@ def script():
 
         print("Uploading to Google Sheets...")
         upload_to_sheets(process_df)
-
 
         print("Done!")
 
