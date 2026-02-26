@@ -99,6 +99,8 @@ def process_data(df):
 
     print(session_df.head())
 
+    return session_df
+
 def upload_to_sheets(df):
         
         SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
@@ -114,8 +116,8 @@ def upload_to_sheets(df):
         sheet = client.open("Session Data").sheet1
         
         sheet.clear()
-        # sheet.update([df.columns.values.tolist()]) + df.values.tolist()
-        sheet.update("A1",[["Hello World"]])
+        sheet.update([df.columns.values.tolist()] + df.values.tolist())
+        
 
 
 def script():
@@ -134,10 +136,10 @@ def script():
 
     if df is not None:
         print("Processing...")
-        process_data(df)
+        process_df = process_data(df)
 
         print("Uploading to Google Sheets...")
-        upload_to_sheets(df)
+        upload_to_sheets(process_df)
 
 
         print("Done!")
