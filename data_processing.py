@@ -79,10 +79,12 @@ def process_data(df):
     'traffic_source.source': 'first',
     'traffic_source.medium': 'first',
     'engagement_time_msec': 'sum',
-    'event_timestamp': 'min'}).reset_index()
+    'event_timestamp': 'min',}).reset_index()
 
     # convert engagement_time_msec to numeric
     session_df['engagement_time_msec'] = pd.to_numeric(session_df['engagement_time_msec'], errors='coerce')
+
+    session_df = session_df.dropna()
 
     # Page views per session
     page_counts = (
@@ -97,6 +99,10 @@ def process_data(df):
 
     # Bounce flag
     session_df['bounced'] = session_df['page_views'] == 1
+
+    # Engaged session
+
+    session_df['engaged_session'] = ((session_df['page_views'] >= 2) | (session_df['engagement_time_msec'] > 10000)).astype(int)
 
     print(session_df.head())
 
